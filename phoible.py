@@ -1,8 +1,5 @@
 import pandas as pd
 
-# options: only phonemes; w/allophones; w/features
-# 'tone', 'stress' -> can have tone / can be stressed
-
 # Создаём словарь с парами вида "аббревиатура источника: название источника" для красивого вывода
 inventories_dict = {"aa": "Chanard, C. (2006). Systèmes alphabétiques des langues africaines",
                     "ea": "Nikolaev, Dmitry; Andrey Nikulin; and Anton Kukhto. 2015. The database of Eurasian phonological inventories",
@@ -32,8 +29,7 @@ def get_info(language_name: str):
     # Достаём информацию про каждую пару (диалект - источник) и сводим в один вывод.
     for dialect_source in dialect_source_list:
         # Создаём датафрейм с информацией только про нужный диалект и источник и передаём его в функцию.
-        dialect_source_info = language_name_info[(language_name_info["SpecificDialect"] == dialect_source[0]) &
-                                                 (language_name_info["Source"] == dialect_source[1])]
+        dialect_source_info = language_name_info[(language_name_info["SpecificDialect"] == dialect_source[0]) & (language_name_info["Source"] == dialect_source[1])]
         output_text += get_dialect_info(dialect_source_info, language_name, dialect_source[0], dialect_source[1])
 
     return output_text
@@ -52,6 +48,3 @@ def get_dialect_info(dialect_source_info: pd.DataFrame, language_name: str, dial
     output_text += f"Phonemes\nConsonants: {', '.join(consonants_list)}.\nVowels: {', '.join(vowels_list)}.\n\n"
 
     return output_text
-
-
-print(get_info("Moloko"))
