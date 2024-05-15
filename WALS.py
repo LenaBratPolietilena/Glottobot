@@ -67,6 +67,8 @@ def get_info(user_language_reply: str, user_field: str):
     # turning output into text format
     values = " ".join(final_output)
     keys = " ".join(final_output.keys())
-    output = "\n".join(f'{keys}: {values}' for keys, values in final_output.items())
+    output = f'Here is the information about {user_language_reply} {user_field}:\n\n'+"\n".join(f'{keys}: {values}'
+                                                                                                for keys, values in
+                                                                                                final_output.items())
 
     return output
