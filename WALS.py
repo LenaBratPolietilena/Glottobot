@@ -1,17 +1,27 @@
+"""The WALS module lets user get information about various features of requested languages from WALS database."""
+
 import pandas as pd
 
 
 def get_info(user_language_reply: str, user_field: str):
+
+    """
+    This function gives information about a particular language field in a particular language.
+    :param user_language_reply: a name of requested language.
+    :param user_field: language field, requested by user (from the list: "phonetics", "morphology", "syntax", "lexicon")
+    :return: The function returns the list of feature names with their values in text format.
+    """
+
     user_language = user_language_reply.lower()
 
-    # getting codes of languages
+    # changing input format to a better processable one
     file_languages_info = pd.read_csv('https://raw.githubusercontent.com/cldf-datasets/wals/master/raw/'
                                       'languagesMSD.csv')
     languages_info = pd.DataFrame(data=file_languages_info)
     languages_info["NameNEW"] = languages_info["NameNEW"].str.lower()
     languages_info["NameNEW"] = languages_info["NameNEW"].apply(lambda x: x.split()[0] if "(" in x else x)
 
-    # getting wals_code for checking for values
+    # getting wals_code for checking for values and checking for requested language in WALS database
     if user_language in languages_info.values:
         user_code = languages_info.loc[languages_info["NameNEW"] == user_language, "ID"].iloc[0]
     else:
@@ -34,7 +44,7 @@ def get_info(user_language_reply: str, user_field: str):
                                "118A", "119A", "120A", "121A", "122A", "123A", "124A", "125A", "126A", "127A", "128A"]
     chapter_types["lexicon"] = ["129A", "130A", "131A", "132A", "133A", "134A", "135A", "136A", "137A", "138A"]
 
-    # accessing file with data for every chapter and every language
+    # accessing file with data for every chapter and every language in the database
     file_main_data = pd.read_csv('https://raw.githubusercontent.com/cldf-datasets/wals/master/cldf/values.csv')
     main_data = pd.DataFrame(data=file_main_data)
 
@@ -44,7 +54,7 @@ def get_info(user_language_reply: str, user_field: str):
         if chapter + "-" + user_code in main_data["ID"].values:
             user_output[chapter] = main_data.loc[main_data["ID"] == chapter + "-" + user_code, "Value"].iloc[0]
 
-    # getting verbal descriptions for chapter values
+    # getting descriptions for chapter values
     file_chapters_values = pd.read_csv('https://raw.githubusercontent.com/cldf-datasets/wals/master/raw/'
                                        'domainelement.csv')
     chapters_values = pd.DataFrame(data=file_chapters_values)
@@ -55,7 +65,7 @@ def get_info(user_language_reply: str, user_field: str):
             descriptions[chapter] = chapters_values.loc[chapters_values["id"] == chapter + "-"
                                                         + str(user_output[chapter]), "description"].iloc[0]
 
-    # getting verbal chapter names
+    # getting chapter names
     final_output = dict()
     file_chapters_names = pd.read_csv('https://raw.githubusercontent.com/cldf-datasets/wals/master/cldf/chapters.csv')
     chapters_names = pd.DataFrame(data=file_chapters_names)
