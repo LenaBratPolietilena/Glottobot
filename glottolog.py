@@ -41,6 +41,3 @@ def glottolog_info(language: str):
     output = '\n'.join(ans)
             
     return output
-
-
-print(glottolog_info("Russian"))
