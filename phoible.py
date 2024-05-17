@@ -28,7 +28,7 @@ def get_dialect_info(dialect_source_info: pd.DataFrame, language_name: str, dial
 
     if dialect == "nan":
         dialect = "Standard"
-    output_text = f"Phonological system of {language_name} ({dialect}). Source: {inventories_dict[source]}.\n"
+    output_text = f"Phonological inventory of {language_name} ({dialect}). Source: {inventories_dict[source]}.\n"
 
     # Output of a list of segments.
     consonants_list = list(dialect_source_info[dialect_source_info["SegmentClass"] == "consonant"]["Phoneme"])
@@ -43,14 +43,14 @@ def get_dialect_info(dialect_source_info: pd.DataFrame, language_name: str, dial
     for i in range(len(consonants_list)):
         if consonants_allophones_list[i] == "nan":
             consonants_allophones_list[i] = consonants_list[i]
-        output_text += f"{consonants_list[i]} /{', '.join(consonants_allophones_list[i].split())}/ "
+    output_text += ', '.join([f"{consonants_list[i]} /{', '.join(consonants_allophones_list[i].split())}/" for i in range(len(consonants_list))])
     output_text += "\nVowels: "
 
     for i in range(len(vowels_list)):
         if vowels_allophones_list[i] == "nan":
             vowels_allophones_list[i] = vowels_list[i]
-        output_text += f"{vowels_list[i]} /{', '.join(vowels_allophones_list[i].split())}/ "
-    output_text += "\n"
+    output_text += ', '.join([f"{vowels_list[i]} /{', '.join(vowels_allophones_list[i].split())}/" for i in range(len(vowels_list))])
+    output_text += "\n\n"
     '''
     # Output of a list of segments with their features.
     output_text += "List of phonemes with their characteristics:\nConsonants:\n"
@@ -80,21 +80,21 @@ def get_info(language_name: str) -> str:
     output_text = "PHOIBLE data:\n\n"
 
     # languages_info - a dataframe with information about all languages that are described in PHOIBLE.
-    languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/data/phoible.csv', dtype=str).applymap(str)  
+    languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/data/phoible.csv', dtype=str).applymap(str)
     # Checking if the requested langauge exists in PHOIBLE database
     if language_name.lower() not in list(languages_info["LanguageName"].str.lower()):
         return "0"
     # language_name_info - a dataframe with information about the requested language only.
     language_name_info = languages_info[languages_info["LanguageName"].str.lower() == language_name.lower()]
 
-    # Here we create a list of tuples: (dialect of the language: source we take information from).
-    dialect_source_list = []
+    # Here we create a set of tuples: (dialect of the language: source we take information from).
+    dialect_source_set = set()
     for i in range(language_name_info.shape[0]):
-        if (language_name_info["SpecificDialect"].iloc[i], language_name_info["Source"].iloc[i]) not in dialect_source_list:
-            dialect_source_list.append((language_name_info["SpecificDialect"].iloc[i], language_name_info["Source"].iloc[i]))
+        if (language_name_info["SpecificDialect"].iloc[i], language_name_info["Source"].iloc[i]) not in dialect_source_set:
+            dialect_source_set.add((language_name_info["SpecificDialect"].iloc[i], language_name_info["Source"].iloc[i]))
 
     # Here we get all info about each (dialect, source) pair and put it in one output.
-    for dialect_source in dialect_source_list:
+    for dialect_source in dialect_source_set:
         # We create a dataframe only about a particular dialect and source.
         dialect_source_info = language_name_info[(language_name_info["SpecificDialect"] == dialect_source[0]) &
                                                  (language_name_info["Source"] == dialect_source[1])]
