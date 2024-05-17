@@ -16,6 +16,19 @@ inventories_dict = {"aa": "Chanard, C. (2006). Systèmes alphabétiques des lang
                     "upsid": "Maddieson, I., & Precoda, K. (1990). Updating UPSID. UCLA Working Papers in Phonetics"}
 
 
+def is_available(language_name: str) -> bool:
+    """
+    The is_available function checks out whether the user_language is in the database or not.
+    :param language_name: the requested name.
+    :return: If it is true that the language is in PHOIBLE data base.
+    """
+    
+    languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/data/phoible.csv', dtype=str).applymap(str)
+    if language_name.lower() not in list(languages_info["LanguageName"].str.lower()):
+        return False
+    return True
+
+
 def get_dialect_info(dialect_source_info: pd.DataFrame, language_name: str, dialect: str, source: str) -> str:
     """
     This function gives information about a phonological inventory of a particular dialect from a particular source.
