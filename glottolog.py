@@ -14,7 +14,7 @@ def glottolog_info(user_language: str):
         user_code = languages_info.loc[languages_info["LanguageName"] == user_language, "Glottocode"].iloc[0]
     else:
         user_code = str()        
-        return ("Check the name of the language. Maybe, there's a spelling mistake, or there's no such language in Glottolog.")
+        return 0
             
     # finding the necessary webpage
     final_link = "https://glottolog.org/resource/languoid/id/" + user_code + ".json"
