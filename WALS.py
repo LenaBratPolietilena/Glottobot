@@ -33,6 +33,7 @@ def get_info(user_language_reply: str, user_field: str):
             # an output if the language was not found in WALS
             return f'Unfortunately, {user_language_reply} cannot be found in WALS {user_field} database'
 
+
     # setting chapters for particular language fields
     chapter_types = dict()
     chapter_types["phonetics"] = ["1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A", "9A",
