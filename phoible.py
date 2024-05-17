@@ -77,7 +77,7 @@ def get_info(language_name: str) -> str:
     :return: The string with the phonology of the requested language. It returns each inventory in 3 ways: a list of phonemes, a list of phonemes with their allophones, a list of phonemes with their features.
     """
 
-    output_text = "PHOIBLE info:\n\n"
+    output_text = "PHOIBLE data:\n\n"
 
     # languages_info - a dataframe with information about all languages that are described in PHOIBLE.
     languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/data/phoible.csv', dtype=str).applymap(str)  
