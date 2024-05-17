@@ -9,6 +9,8 @@ Program will find some information for these fields in the foreseeable future.
 
 
 def get_the_wisdom_of_grambank(user_language: str, user_field: str):
+
+    user_language = user_language.lower()
     
     # changing input format to a processable one
     file_languages_info = pd.read_csv('https://raw.githubusercontent.com/grambank/grambank/master/cldf/languages.csv')
