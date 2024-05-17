@@ -1,20 +1,23 @@
-def glottolog_info(language: str):
+def glottolog_info(user_language: str):
     
     import requests
     import json
     import csv
+    import pandas as pd
 
-    ans = [str("Here's classification and geographical coordinates of " + language + ":")]
+    ans = [str("Here's classification and geographical coordinates of " + user_language + ":")]
 
     # getting the code for the url
-    with open("glottocodes.csv", "r") as g:
-        codes = csv.reader(g, dialect='excel', delimiter=';')
-        for code in codes:
-            if code[0] == language:
-                needed_code = code[1]
-
+    languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/mappings/InventoryID-LanguageCodes.csv', dtype=str)
+    
+    if user_language in languages_info.values:
+        user_code = languages_info.loc[languages_info["LanguageName"] == user_language, "Glottocode"].iloc[0]
+    else:
+        user_code = str()        
+        return ("Check the name of the language. Maybe, there's a spelling mistake, or there's no such language in Glottolog.")
+            
     # finding the necessary webpage
-    final_link = "https://glottolog.org/resource/languoid/id/" + needed_code + ".json"
+    final_link = "https://glottolog.org/resource/languoid/id/" + user_code + ".json"
 
     # downloading the info from the webpage
     final = requests.get(final_link)
@@ -41,3 +44,5 @@ def glottolog_info(language: str):
     output = '\n'.join(ans)
             
     return output
+
+
