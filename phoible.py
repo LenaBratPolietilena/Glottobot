@@ -51,7 +51,7 @@ def get_dialect_info(dialect_source_info: pd.DataFrame, language_name: str, dial
             vowels_allophones_list[i] = vowels_list[i]
         output_text += f"{vowels_list[i]} /{', '.join(vowels_allophones_list[i].split())}/ "
     output_text += "\n"
-
+    '''
     # Output of a list of segments with their features.
     output_text += "List of phonemes with their characteristics:\nConsonants:\n"
 
@@ -64,7 +64,7 @@ def get_dialect_info(dialect_source_info: pd.DataFrame, language_name: str, dial
         vowel_row = dialect_source_info[dialect_source_info["Phoneme"] == vowel]
         output_text += f"{vowel} ({', '.join(vowel_row.columns[vowel_row.isin(['+']).any()].tolist())})\n"
     output_text += "\n"
-
+    '''
     return output_text
 
 
@@ -80,7 +80,10 @@ def get_info(language_name: str) -> str:
     output_text = "PHOIBLE info:\n\n"
 
     # languages_info - a dataframe with information about all languages that are described in PHOIBLE.
-    languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/data/phoible.csv', dtype=str).applymap(str)
+    languages_info = pd.read_csv('https://raw.githubusercontent.com/phoible/dev/master/data/phoible.csv', dtype=str).applymap(str)  
+    # Checking if the requested langauge exists in PHOIBLE database
+    if language_name.lower() not in list(languages_info["LanguageName"].str.lower()):
+        return "0"
     # language_name_info - a dataframe with information about the requested language only.
     language_name_info = languages_info[languages_info["LanguageName"].str.lower() == language_name.lower()]
 
