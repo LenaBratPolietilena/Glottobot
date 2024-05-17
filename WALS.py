@@ -31,7 +31,7 @@ def get_info(user_language_reply: str, user_field: str):
             user_code = languages_info.loc[languages_info["NameNEW"] == user_language, "ID"].iloc[0]
         else:
             # an output if the language was not found in WALS
-            return f'Unfortunately, {user_language_reply} cannot be found in WALS {user_field} database'
+            return 0
 
     # setting chapters for particular language fields
     chapter_types = dict()
