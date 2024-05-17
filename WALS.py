@@ -33,7 +33,6 @@ def get_info(user_language_reply: str, user_field: str):
             # an output if the language was not found in WALS
             return f'Unfortunately, {user_language_reply} cannot be found in WALS {user_field} database'
 
-
     # setting chapters for particular language fields
     chapter_types = dict()
     chapter_types["phonetics"] = ["1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A", "9A",
@@ -100,10 +99,12 @@ def get_field(user_language_reply: str):
 
     user_language = user_language_reply.lower()
 
+    # changing input format to a better processable one
     file_languages_info = pd.read_csv('https://raw.githubusercontent.com/cldf-datasets/wals/master/raw/languagesMSD.csv')
     languages_info = pd.DataFrame(data=file_languages_info)
     languages_info["NameNEW"] = languages_info["NameNEW"].str.lower()
 
+    # setting chapters for particular language fields
     chapter_types = dict()
     chapter_types["phonetics"] = ["1A", "2A", "3A", "4A", "5A", "6A", "7A", "8A", "9A",
                                   "10A", "11A", "12A", "13A", "14A", "15A", "16A", "17A", "18A", "19A"]
@@ -127,9 +128,11 @@ def get_field(user_language_reply: str):
     file_main_data = pd.read_csv('https://raw.githubusercontent.com/cldf-datasets/wals/master/cldf/values.csv')
     main_data = pd.DataFrame(data=file_main_data)
 
+    # getting wals_code for checking for values and checking for requested language in WALS database
     if user_language in languages_info.values:
         user_code = languages_info.loc[languages_info["NameNEW"] == user_language, "ID"].iloc[0]
 
+        # checking for languages in particular fields
         field_output = list()
         for chapter in chapter_types["phonetics"]:
             if chapter + "-" + user_code in main_data["ID"].values:
