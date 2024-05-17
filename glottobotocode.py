@@ -43,17 +43,19 @@ def take_language(message):
 
 def choose_domain(message):
     chat_id = message.chat.id
-    keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     button_phonetics = telebot.types.KeyboardButton(text='phonetics')
     keyboard.add(button_phonetics)
-    button_phonological_inventory_description = telebot.types.KeyboardButton(text='phonological inventory description')
-    keyboard.add(button_phonological_inventory_description)
+#    button_phonological_inventory_description = telebot.types.KeyboardButton(text='phonological inventory description')
+#    keyboard.add(button_phonological_inventory_description)
     button_morphology = telebot.types.KeyboardButton(text='morphology')
     keyboard.add(button_morphology)
     button_syntax = telebot.types.KeyboardButton(text='syntax')
     keyboard.add(button_syntax)
     button_lexicon = telebot.types.KeyboardButton(text='lexicon')
     keyboard.add(button_lexicon)
+    button_typology = telebot.types.KeyboardButton(text='typology&dialects')
+    keyboard.add(button_typology)
     button_twin_languages = telebot.types.KeyboardButton(text='potential languages')
     keyboard.add(button_twin_languages)
     glottobot.send_message(chat_id, 
@@ -69,15 +71,19 @@ def phonetics(message):
     glottobot.send_message(chat_id, 
                            f'WALS data: \n{language.wals_extract(chat_id, "phonetics")}')
     glottobot.send_message(chat_id, 
-                           f'{language.phoible_extract()}')
-
-
-@glottobot.message_handler(func=lambda message: message.text == 'phonological inventory description')
-def phonological_inventory_description(message):
-    chat_id = message.chat.id
-    language = users[chat_id]
+                           'Loading PHOIBLE...')
     glottobot.send_message(chat_id, 
-                           f'{language.phonological_inventory_extract()}')
+                           f'{language.phoible_extract()}')
+    glottobot.send_message(chat_id, 
+                           f'You can also check out {language.is_data_available} of the {language.name} language. For a new language just type its name')
+
+
+# @glottobot.message_handler(func=lambda message: message.text == 'phonological inventory description')
+# def phonological_inventory_description(message):
+#    chat_id = message.chat.id
+#    language = users[chat_id]
+#    glottobot.send_message(chat_id, 
+#                           f'{language.phonological_inventory_extract()}')
 
 
 @glottobot.message_handler(func=lambda message: message.text == 'morphology')
@@ -96,6 +102,8 @@ def syntax(message):
     language = users[message.chat.id]
     glottobot.send_message(chat_id, 
                            f'WALS data: \n\n{language.wals_extract(chat_id, "syntax")}')
+    glottobot.send_message(chat_id, 
+                           f'You can also check out {language.is_data_available} of the {language.name} language. For a new language just type its name')
 
 
 @glottobot.message_handler(func=lambda message: message.text == 'lexicon')
@@ -105,7 +113,17 @@ def lexicon(message):
     glottobot.send_message(chat_id, 
                            f'WALS data: \n\n{language.wals_extract(chat_id, "lexicon")}')
     glottobot.send_message(chat_id, 
+                           f'You can also check out {language.is_data_available} of the {language.name} language. For a new language just type its name')
+
+
+@glottobot.message_handler(func=lambda message: message.text == 'typology&dialects')
+def lexicon(message):
+    chat_id = message.chat.id
+    language = users[chat_id]
+    glottobot.send_message(chat_id, 
                            f'Glottolog data: \n\n{language.glottolog_extract()}')
+    glottobot.send_message(chat_id, 
+                           f'You can also check out {language.is_data_available} of the {language.name} language. For a new language just type its name')
 
 
 @glottobot.message_handler(func=lambda message: message.text == 'potential languages')
@@ -128,7 +146,12 @@ class Language:
         self.name = name
 
     def is_data_available(self):
-        pass
+        available_domains = set()
+        available_domains.append('typology&dialects') if glottolog.is_availble(self.name) else None
+        available_domains.append('phonetics') if phoible.is_available(self.name) else None
+        available_domains.extend(WALS.get_field(self.name).split(', '))
+#        available_domains.extend(grambank.get_field(self.name).split(', '))
+        return ', '.join(x for x in list(set(available_domains)))
 
     def phoible_extract(self):
         if phoible.get_info(self.name) == 0:
@@ -149,7 +172,7 @@ class Language:
     def glottolog_extract(self):
         if glottolog.glottolog_info(self.name) == 0:
             return f'Unfortunately, {self.name} is not found in Glottolog database'
-        return glottolog.glottolog_info(self.name) + f'\n\nIf you would like to learn more about phological inventory of {self.name}, click on the Phonological Inventory Description button'
+        return glottolog.glottolog_info(self.name)
 
     def twin_languages(self):
         jarowinkler = JaroWinkler()
