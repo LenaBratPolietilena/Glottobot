@@ -19,7 +19,7 @@ def get_the_wisdom_of_grambank(user_language: str, user_field: str):
     if user_language in languages_info.values:
         user_code = languages_info.loc[languages_info["Name"] == user_language, "ID"].iloc[0]
     else:
-        return 0
+        return 'Unfortunately, Grambank can offer no knowledge concerning ' + user_language.title() + '.'
 
     # setting questions for particular language fields
     fields = dict()
