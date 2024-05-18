@@ -14,7 +14,15 @@ _Five weird lil guys doing a big scary project frrr bruhhh_
 ## Инструкция по запуску бота:
 Бот работает в телеграм по ссылке: 
 https://t.me/glottobot_bot
-Бота также можно запустить с локального устройства. Для этого необходимо клонировать репозиторий Glottobot (git clone https://github.com/LenaBratPolietilena/Glottobot.git), установить необходимые библиотеки из requirements.txt (pip install -r requirements.txt).
+
+Бота также можно запустить с локального устройства. Для этого необходимо клонировать репозиторий Glottobot: 
+```
+git clone https://github.com/LenaBratPolietilena/Glottobot.git
+```
+Установить необходимые библиотеки из requirements.txt:
+```
+pip install -r requirements.txt
+```
 Готово! В целом ботом уже можно пользоваться. 
 
 ## Источники данных:
