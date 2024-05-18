@@ -1,3 +1,8 @@
+"""
+The glottobotocode module contains the code of telegram bot called Glottolog.
+It aggregates all the data from other modules that process databases and gives it out in readable way to the telegram bot.
+"""
+
 import telebot
 import WALS
 import phoible
@@ -8,11 +13,11 @@ import strsimpy
 import pandas as pd
 from telebot import types
 from strsimpy.jaro_winkler import JaroWinkler
-from aiogram.types import (ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton)
 
-
+# to ignore some minor warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
+# the initializer of the bot
 glottobot = telebot.TeleBot('6968053374:AAFnvlfo95Bvfn7IzPPSHWI6keFEoFFiiBU')
 
 # dictionary that later will set one-to-one correspondence between user and the language she has chosen
@@ -21,9 +26,9 @@ users = {}
 
 @glottobot.message_handler(commands=['start'])
 def send_welcome(message):
-    '''
+    """
     The function send_welcome shows the welcome message and instruction of using the bot.
-    '''
+    """
     
     glottobot.reply_to(message, 
                        f'Hi! This is a bot that can help you to get general info about your requested language from typological databases. Bases currently available are WALS, Phoible, Grambank, and Glottolog.\nSend me a language you want to learn more about:')
@@ -32,10 +37,10 @@ def send_welcome(message):
 
 @glottobot.message_handler(func=lambda message: message.text not in {'phonetics', 'morphology', 'syntax', 'lexicon', 'phonological inventory description', 'potential languages', 'typology&dialects', '/start', '/help', '/anecdote'})
 def take_language(message):
-    '''
+    """
     The function take_language takes user's language and set it as the value of users-dictionary (key: chat_id).
     Then it shows the available domains of the language using .is_data_available() method of class Language. 
-    '''
+    """
     
     language_name = message.text.title()
     language = Language(language_name)
@@ -49,9 +54,9 @@ def take_language(message):
 
 
 def choose_domain(message):
-    '''
+    """
     The function choose_domain creates keyboard with buttons: phonetics, morphology, syntax, lexicon, typology&dialects and potential languages.
-    '''
+    """
     
     chat_id = message.chat.id
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -74,9 +79,9 @@ def choose_domain(message):
 
 @glottobot.message_handler(func=lambda message: message.text == 'phonetics')
 def phonetics(message):
-    '''
+    """
     The function phonetics collects the data about the phonetics of the user's language (WALS and PHOIBLE data is used).
-    '''
+    """
     
     chat_id = message.chat.id
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
@@ -93,9 +98,9 @@ def phonetics(message):
 
 @glottobot.message_handler(func=lambda message: message.text == 'morphology')
 def morphology(message):
-    '''
+    """
     The function morphology collects the data about the morphology of the user's language (WALS and Grambank data is used).
-    '''
+    """
     
     chat_id = message.chat.id
     language = users[chat_id]
@@ -109,9 +114,9 @@ def morphology(message):
 
 @glottobot.message_handler(func=lambda message: message.text == 'syntax')
 def syntax(message):
-    '''
+    """
     The function syntax collects the data about the syntax of the user's language (WALS and Grambank data is used).
-    '''
+    """
     
     chat_id = message.chat.id
     language = users[message.chat.id]
@@ -125,9 +130,9 @@ def syntax(message):
 
 @glottobot.message_handler(func=lambda message: message.text == 'lexicon')
 def lexicon(message):
-    '''
+    """
     The function lexicon collects the data about the lexicon of the user's language (WALS and Grambank data is used).
-    '''
+    """
     
     chat_id = message.chat.id
     language = users[chat_id]
@@ -141,9 +146,9 @@ def lexicon(message):
 
 @glottobot.message_handler(func=lambda message: message.text == 'typology&dialects')
 def typology_dialects(message):
-    '''
+    """
     The function typology_dialects collects the data about the typology_dialects of the user's language (Glottolog data is used).
-    '''
+    """
     
     chat_id = message.chat.id
     language = users[chat_id]
@@ -155,10 +160,10 @@ def typology_dialects(message):
 
 @glottobot.message_handler(func=lambda message: message.text == 'potential languages')
 def potential_languages(message):
-    '''
+    """
     The function potential_languages finds out some (around dozen) of the potential names of languages the user might have meant.
     It uses method twin_languages() of class Language.
-    '''
+    """
     
     chat_id = message.chat.id
     language = users[chat_id]
@@ -178,10 +183,10 @@ class Language:
         self.name = name
 
     def is_data_available(self):
-        '''
+        """
         The function is_data_available finds out whether the data on the user's language is available or not.
         It uses specific functions from phoible.py, WALS.py, Grambank.py, glottolog.py files.
-        '''
+        """
         
         available_domains = []
         available_domains.append('typology&dialects') if glottolog.is_available(self.name) else None
@@ -193,9 +198,9 @@ class Language:
         return 'None'
 
     def phoible_extract(self):
-        '''
+        """
         The function phoible_extract collects the data from PHOIBLE using the phoible.py file.
-        '''
+        """
         
         phoible_output = phoible.get_info(self.name)
         if phoible_output == 0:
@@ -203,9 +208,9 @@ class Language:
         return phoible_output
 
     def wals_extract(self, chat_id, user_field):
-        '''
+        """
         The function wals_extract collects the data from WALS using the WALS.py file.
-        '''
+        """
         
         wals_output = WALS.get_info(self.name, user_field)
         if wals_output == 0:
@@ -213,9 +218,9 @@ class Language:
         return wals_output
     
     def grambank_extract(self, chat_id, user_field):
-        '''
+        """
         The function grambank_extract collects the data from grambank using the Grambank.py file.
-        '''
+        """
         
         grambank_output = Grambank.get_the_wisdom_of_grambank(self.name, user_field)
         if grambank_output == 0:
@@ -223,19 +228,20 @@ class Language:
         return grambank_output
 
     def glottolog_extract(self):
-        '''
+        """
         The function glottolog_extract collects the data from glottolog using the glottolog.py file.
-        '''
+        """
+        
         glottolog_output = glottolog.glottolog_info(self.name)
         if glottolog_output  == 0:
             return f'Unfortunately, {self.name} is not found in Glottolog database'
         return glottolog_output 
 
     def twin_languages(self):
-        '''
+        """
         The function twin_languages finds out some (around dozen) of the potential names of languages the user might have meant.
         It uses strsimpy library and Jaro-Winklers metrics to calculate the distanse between two strings - the language given and the potential option. 
-        '''
+        """
         
         jarowinkler = JaroWinkler()
         best_twin_languages = []
