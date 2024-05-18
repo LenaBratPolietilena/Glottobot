@@ -107,6 +107,8 @@ def morphology(message):
     glottobot.send_message(chat_id, 
                            f'WALS data: \n{language.wals_extract(chat_id, "morphology")}')
     glottobot.send_message(chat_id, 
+                           'Loading Grambank...')
+    glottobot.send_message(chat_id, 
                            f'Grambank data: \n{language.grambank_extract(chat_id, "morphology")}')
     glottobot.send_message(chat_id, 
                            f'For a new language just type its name or choose another domain')
@@ -123,6 +125,8 @@ def syntax(message):
     glottobot.send_message(chat_id, 
                            f'WALS data: \n{language.wals_extract(chat_id, "syntax")}')
     glottobot.send_message(chat_id, 
+                           'Loading Grambank...')
+    glottobot.send_message(chat_id, 
                            f'Grambank data: \n{language.grambank_extract(chat_id, "syntax")}')
     glottobot.send_message(chat_id, 
                            f'For a new language just type its name or choose another domain')
@@ -138,6 +142,8 @@ def lexicon(message):
     language = users[chat_id]
     glottobot.send_message(chat_id, 
                            f'WALS data: \n{language.wals_extract(chat_id, "lexicon")}')
+    glottobot.send_message(chat_id, 
+                           'Loading Grambank...')
     glottobot.send_message(chat_id, 
                            f'Grambank data: \n{language.grambank_extract(chat_id, "lexicon")}')
     glottobot.send_message(chat_id, 
