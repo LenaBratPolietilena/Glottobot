@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 ## Источники данных:
 Данные для бота берутся из таблиц, опубликованных в открытых гитхабах соответствующих баз. Ниже ссылки на авторство баз:
-
+    
     Dryer, Matthew S. & Haspelmath, Martin (eds.) 2013. The World Atlas of Language Structures Online. Jena: Max Planck Institute for the Science of Human History. (Available online at https://wals.info, github: https://github.com/clld/wals3)
     
   Hammarström, Harald & Forkel, Robert & Haspelmath, Martin & Bank, Sebastian. 2020. Glottolog 4.2.1. Jena: Max Planck Institute for the Science of Human History. (Available online at https://glottolog.org, github: https://github.com/glottolog)
