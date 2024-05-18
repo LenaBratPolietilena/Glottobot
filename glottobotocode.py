@@ -188,7 +188,7 @@ class Language:
         available_domains.append('phonetics') if phoible.is_available(self.name) else None
         available_domains.extend(WALS.get_field(self.name).split(', '))
         available_domains.extend(Grambank.get_field(self.name).split(', '))
-        if len(available_domains) > 0:
+        if available_domains != ['', '']:
             return ', '.join(x for x in list(set(available_domains)))
         return 'None'
 
