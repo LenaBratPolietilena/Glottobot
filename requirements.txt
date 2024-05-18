@@ -1,5 +1,4 @@
 pandas~=2.0.3
 pyTelegramBotAPI~=4.18.1
-aiogram~=3.7.0
 strsimpy~=0.2.1
 requests~=2.31.0
